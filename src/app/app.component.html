@@ -1,0 +1,64 @@
+<div class="top-menu">
+  <img
+    class="logo"
+    src="https://angular-academy.s3.amazonaws.com/main-logo/main-page-logo-small-hat.png"
+  />
+</div>
+
+<div class="demo">
+  <button (click)="onEditCourse()">Edit First Course Title</button>
+</div>
+
+<!-- <div class="courses" #viewChildContainer *ngIf="courses[0] as course"> -->
+<div class="courses" #viewChildContainer *ngIf="courses$ | async as courses">
+  <!-- {{ myStr | slice:0:2}}
+
+  <div *ngFor="let item of object | keyvalue">
+    {{item.key}}:{{item.value}}
+  </div>
+  <div *ngFor="let item of map | keyvalue">
+    {{item.key}}:{{item.value}}
+  </div> -->
+
+  <ng-template #blankImage let-courseName="description">
+    <p class="warn">{{ courseName }} has no image yet.</p>
+    <img src="/assets/empty-image.png" />
+  </ng-template>
+
+  <!-- <ng-container
+    *ngTemplateOutlet="
+      blankImage;
+      context: { description: courses[0].description }
+    "
+  ></ng-container> -->
+  <!-- let course of courses$ | async; can be written in for loop-->
+  <course-card
+    highlighted
+    #highlighter="hl"
+    (toggleHighlight)="onToggle($event)"
+    *ngFor="
+      let course of courses | filterByCategory: 'BEGINNER';
+      index as cardIndex;
+      first as isFirst;
+      last as isLast;
+      odd as isOdd;
+      even as isEven
+    "
+    [course]="course"
+    [cardIndex]="cardIndex + 1"
+    [class.is-first]="isFirst"
+    [class.is-last]="isLast"
+    (courseViewed)="onCourseSelected($event)"
+    (courseChanged)="save($event)"
+    [noImageTpl]="blankImage"
+    type="course-card-type" 
+  >
+  <!-- Above type="course-card-type" can be written like [type]="'course-card-type'" in case if we want to handle it through @Input() but as we know type is string literal and won't change so to avoid change detection type attribute we can define as above with@Attribute decorator in course-card component constructor -->
+    <course-image [src]="course.iconUrl"></course-image>
+    <div class="course-description" (dblclick)="highlighter.toggle()">
+      {{ course.longDescription }}
+    </div>
+    <p #courseCardProjection>Testing 1</p>
+    <p *ngxUnless="course.iconUrl">Testing 2</p>
+  </course-card>
+</div>

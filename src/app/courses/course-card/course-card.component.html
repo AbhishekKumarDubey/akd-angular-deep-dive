@@ -1,0 +1,72 @@
+<div
+  class="course-card"
+  *ngIf="course"
+  [ngClass]="cardClasses()"
+  [ngStyle]="cardStyles()"
+>
+  <div class="course-title">
+    {{ (cardIndex || "") + " " + course.description }}
+  </div>
+
+  <course-title title={{course.description}}></course-title>
+
+  <!-- <ng-template #noImage> No image available </ng-template>
+
+  <img width="300" alt="Angular Logo" *ngIf="course.iconUrl; else noImage"
+       [src]="course.iconUrl">
+
+  <ng-content
+    select="course-image"
+    *ngIf="course.iconUrl; else noImage"
+  ></ng-content> -->
+
+  <!-- <ng-template #blankImage>
+    <p class="warn">{{ course.description }} has no image yet.</p>
+    <img src="/assets/empty-image.png" />
+  </ng-template>
+
+  <ng-content
+    select="course-image"
+    *ngIf="course.iconUrl; else blankImage"
+  ></ng-content> -->
+
+  <!-- <ng-content
+    select="course-image"
+    *ngIf="course.iconUrl; else blankImage"
+  ></ng-content> -->
+
+  <ng-content
+    select="course-image"
+    *ngIf="course.iconUrl; else noImage"
+  ></ng-content>
+
+  <ng-template #noImage>
+    <ng-container
+      *ngTemplateOutlet="
+        noImageTpl;
+        context: { description: course.description }
+      "
+    ></ng-container>
+  </ng-template>
+
+  <!-- <div class="course-description">
+      {{course.longDescription}}
+  </div> -->
+  <ng-content select=".course-description"></ng-content>
+  <ng-content></ng-content>
+
+  <!-- <ng-container class="course-category" [ngSwitch]="course.category"></ng-container> -->
+  <div class="course-category" [ngSwitch]="course.category">
+    <div class="category" *ngSwitchCase="'BEGINNER'">Beginner</div>
+    <div class="category" *ngSwitchCase="'INTERMEDIATE'">Intermediate</div>
+    <div class="category" *ngSwitchCase="'ADVANCE'">Advance</div>
+    <div class="category" *ngSwitchDefault>All level</div>
+  </div>
+
+  <div class="course-description">
+    Edit Title: <input #courseTitle [value]="course.description" (keyup)="onTitleUpdate(courseTitle.value)"/>
+  </div>
+
+  <!-- <button (click)="onCourseViewed()">View Course</button> -->
+  <button (click)="onCourseSave(courseTitle.value)">Save Course</button>
+</div>
